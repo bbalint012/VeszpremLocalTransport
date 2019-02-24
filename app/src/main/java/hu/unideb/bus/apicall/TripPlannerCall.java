@@ -6,6 +6,7 @@ import org.opentripplanner.api.model.Itinerary;
 import org.opentripplanner.api.ws.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,6 @@ public class TripPlannerCall {
         } catch (IOException e) {
             Log.e(TAG, "getTripPlan() failure ", e);
         }
-        return null;
+        return new ArrayList<>();
     }
 }

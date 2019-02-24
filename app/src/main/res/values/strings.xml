@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Vp-bus</string>
+    <string name="app_name">Vp-Transport</string>
     <string name="obaBaseUrl">http://192.168.100.21:8080/</string>
     <string name="otpBaseUrl">http://192.168.100.21:8081/</string>
     <string name="apiKey">TEST</string>
@@ -9,7 +9,7 @@
     <string name="title_planner">Trip Planner</string>
 
     <string name="downloadInProgress">The download is in progress.</string>
-    <string name="downloadOK">The download is complete.</string>
+    <string name="downloadOK">The download is completed.</string>
     <string name="nearbyToolbarText">NEARBY</string>
     <string name="tripPlanningToolbarText">TRIP PLANNING</string>
     <string name="tripPlanner">Trip Planner</string>

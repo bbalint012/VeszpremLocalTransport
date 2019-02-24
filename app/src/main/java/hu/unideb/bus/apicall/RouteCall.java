@@ -3,6 +3,7 @@ package hu.unideb.bus.apicall;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import hu.promera.api.responses.Route;
@@ -36,6 +37,6 @@ public class RouteCall {
         } catch (IOException e) {
             Log.e(TAG, "getRoutesForAgency() failure ", e);
         }
-        return null;
+        return new ArrayList<>();
     }
 }

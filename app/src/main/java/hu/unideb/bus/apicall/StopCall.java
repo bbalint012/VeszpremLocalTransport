@@ -5,12 +5,16 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import hu.promera.api.responses.Stop;
+import hu.promera.api.responses.StopGroup;
 import hu.promera.api.responses.StopsForLocationResponse;
 import hu.promera.api.responses.StopsForRouteResponse;
 import hu.promera.api.service.OneBusAway;
+import hu.unideb.bus.room.model.StopEntity;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -23,16 +27,14 @@ public class StopCall {
                 .create(OneBusAway.class);
     }
 
-    public List<Stop> getStopsForRoute(String routeId) {
+    public List<StopEntity> getStopsForRoute(String routeId) {
         Call<StopsForRouteResponse> call = api.getStopsForRoute(routeId, ApiClient.getApiKey(), true);
 
         try {
             Response<StopsForRouteResponse> response = call.execute();
 
             if (response.isSuccessful() && response.body() != null) {
-                List<Stop> stops = response.body().getData().getReferences().getStops();
-                //TODO elkérni a directiont -> ownDirectionba valami felé legyen kiiratáshoz
-                return stops;
+                return setStopEntities(response);
             } else {
                 Log.e(TAG, "getStopsForRoute() DOES NOT success!!" + response.errorBody());
                 call.cancel();
@@ -41,7 +43,7 @@ public class StopCall {
             Log.e(TAG, "getStopsForRoute() failure on ID: " + routeId);
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
     public List<Stop> getStopsForLocation(LatLng center) {
@@ -60,6 +62,25 @@ public class StopCall {
             Log.e(TAG, "getStopsForLocation() failure on ID: " + center.toString());
         }
 
-        return null;
+        return new ArrayList<>();
+    }
+
+
+    private List<StopEntity> setStopEntities(Response<StopsForRouteResponse> response) {
+        List<StopEntity> entities = new LinkedList<>();
+        List<Stop> stops = response.body().getData().getReferences().getStops();
+        List<StopGroup> stopGroups = response.body().getData().getEntry().getStopGroupings().get(0).getStopGroups();
+
+        for (Stop s : stops) {
+            StopEntity entity = new StopEntity(s);
+            if (stopGroups.get(0).getStopIds().contains(s.getId())) {
+                entity.setDestination(stopGroups.get(0).getName().getDestinationName());
+            } else {
+                entity.setDestination(stopGroups.get(1).getName().getDestinationName());
+            }
+            entities.add(entity);
+        }
+
+        return entities;
     }
 }

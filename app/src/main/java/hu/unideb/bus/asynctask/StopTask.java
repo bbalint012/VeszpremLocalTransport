@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import hu.promera.api.responses.Stop;
@@ -18,7 +19,7 @@ public class StopTask {
             return new StopsForLocationAsyncTask(center).execute().get();
         } catch (Exception e) {
             Log.e(TAG, "StopsForLocationAsyncTask failed ", e);
-            return null;
+            return new ArrayList<>();
         }
     }
 

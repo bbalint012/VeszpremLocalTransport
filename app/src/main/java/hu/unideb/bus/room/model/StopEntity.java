@@ -1,7 +1,6 @@
 package hu.unideb.bus.room.model;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -16,7 +15,7 @@ public class StopEntity {
     private Double lat;
     private Double lon;
     private String direction;
-    private String ownDirection;
+    private String destination;
 
     public StopEntity() {
     }
@@ -71,11 +70,11 @@ public class StopEntity {
         this.direction = direction;
     }
 
-    public String getOwnDirection() {
-        return ownDirection;
+    public String getDestination() {
+        return destination;
     }
 
-    public void setOwnDirection(String ownDirection) {
-        this.ownDirection = ownDirection;
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 }

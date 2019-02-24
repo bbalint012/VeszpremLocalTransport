@@ -86,7 +86,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     //Google Maps service
-    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
 
     //Own oba-api client - TODO: still from local
     implementation 'hu.promera:onebusaway-api:0.0.1-SNAPSHOT'
@@ -97,4 +97,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     implementation 'org.jetbrains:annotations:15.0'
+
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.0'
 }

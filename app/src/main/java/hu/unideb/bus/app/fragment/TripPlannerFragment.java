@@ -25,8 +25,8 @@ import org.opentripplanner.api.model.Itinerary;
 import org.opentripplanner.api.model.Leg;
 import org.opentripplanner.routing.core.TraverseMode;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,7 +36,7 @@ import hu.unideb.bus.R;
 import hu.unideb.bus.apicall.TripRequest;
 import hu.unideb.bus.asynctask.TripPlannerTask;
 import hu.unideb.bus.room.BusRepository;
-import hu.unideb.bus.room.model.StopEntity;
+import hu.unideb.bus.room.model.StopWithDestination;
 import hu.unideb.bus.utils.LocationUtil;
 import hu.unideb.bus.utils.Utils;
 
@@ -67,7 +67,7 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
         }
         mMapView.getMapAsync(this);
 
-        setAutoComplateTextViews();
+        setAutoCompleteTextViews();
         return view;
     }
 
@@ -121,7 +121,7 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
     }
 
     private List<Leg> getItineraries() {
-
+        //TODO:
 
         TripPlannerTask tripPlannerTask = new TripPlannerTask();
         List<Itinerary> result = tripPlannerTask.getTripPlan(
@@ -130,33 +130,22 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
         return result.get(0).legs;
     }
 
-    private String getStopLocation() {
-        return null;
-    }
-
-    private void setAutoComplateTextViews() {
+    private void setAutoCompleteTextViews() {
         BusRepository.getInstance(getActivity())
-                .getStops().observe(this, stops -> {
-            /*ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.select_dialog_item, names);
+                .getStopsWithDestinations().observe(this, list -> {
+            ArrayAdapter<String> adapter =
+                    new ArrayAdapter<>(getActivity(), android.R.layout.two_line_list_item, android.R.id.text2, convertToString(list));
             fromPlace.setAdapter(adapter);
-            toPlace.setAdapter(adapter);*/
+            toPlace.setAdapter(adapter);
         });
     }
 
-    private String[] getListItemsForAutoCompleteTv(List<StopEntity> stops) {
-        String [] items = new String[stops.size()];
-        for (int i = 0; i < stops.size(); i++) {
-            StopEntity s = stops.get(i);
-            items[i] = s.getName() + s.getDirection();
+    private List<String> convertToString(List<StopWithDestination> input) {
+        List<String> result = new ArrayList<>();
+        for (StopWithDestination s : input) {
+            result.add(s.toString());
         }
-
-       /* if (direction == 0) {
-            description = stopGroups.get(0).getName().getDestinationName() + " felé";
-            return stopGroups.get(0);
-        } else
-            description = stopGroups.get(1).getName().getDestinationName() + " felé";
-        return stopGroups.get(1);*/
-       return null;
+        return result;
     }
 
     @Override

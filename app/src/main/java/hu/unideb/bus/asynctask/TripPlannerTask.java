@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.opentripplanner.api.model.Itinerary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import hu.unideb.bus.apicall.TripPlannerCall;
@@ -18,7 +19,7 @@ public class TripPlannerTask {
             return new TripPlannerAsyncTask(request).execute().get();
         } catch (Exception e) {
             Log.e(TAG, "TripPlannerAsyncTask failed ", e);
-            return null;
+            return new ArrayList<>();
         }
     }
 
