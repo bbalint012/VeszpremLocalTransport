@@ -5,8 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,12 +20,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.jetbrains.annotations.NotNull;
 import org.opentripplanner.api.model.Itinerary;
 import org.opentripplanner.api.model.Leg;
 import org.opentripplanner.routing.core.TraverseMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -36,7 +34,7 @@ import hu.unideb.bus.R;
 import hu.unideb.bus.apicall.TripRequest;
 import hu.unideb.bus.asynctask.TripPlannerTask;
 import hu.unideb.bus.room.BusRepository;
-import hu.unideb.bus.room.model.StopWithDestination;
+import hu.unideb.bus.ui.StopListAdapter;
 import hu.unideb.bus.utils.LocationUtil;
 import hu.unideb.bus.utils.Utils;
 
@@ -53,6 +51,7 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tip_planner, container, false);
         Utils.setToolbar((AppCompatActivity) getActivity(), this, view, R.id.tripPlannerToolbar);
+        setSearchBtn(view);
 
         fromPlace = (AutoCompleteTextView) view.findViewById(R.id.fromPlace);
         toPlace = (AutoCompleteTextView) view.findViewById(R.id.toPlace);
@@ -75,7 +74,13 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         setMapControls();
-        showRouteOnMap(getItineraries());
+    }
+
+    private void setSearchBtn(View view) {
+        ImageButton btnAdd = (ImageButton) view.findViewById(R.id.btnSearch);
+        btnAdd.setOnClickListener(v ->
+                showRouteOnMap()
+        );
     }
 
     private void setMapControls() {
@@ -83,7 +88,9 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
         mMap.getUiSettings().setZoomGesturesEnabled(true);
     }
 
-    private void showRouteOnMap(@NotNull List<Leg> itinerary) {
+    private void showRouteOnMap() {
+        final List<Leg> itinerary = getItineraries();
+
         if (itinerary.isEmpty()) {
             return;
         }
@@ -121,7 +128,7 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
     }
 
     private List<Leg> getItineraries() {
-        //TODO:
+        //TODO: a megállók kiválasztásakor el tudjam kérni a megállóhoz tartozó lovation-t
 
         TripPlannerTask tripPlannerTask = new TripPlannerTask();
         List<Itinerary> result = tripPlannerTask.getTripPlan(
@@ -132,21 +139,12 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
 
     private void setAutoCompleteTextViews() {
         BusRepository.getInstance(getActivity())
-                .getStopsWithDestinations().observe(this, list -> {
-            ArrayAdapter<String> adapter =
-                    new ArrayAdapter<>(getActivity(), android.R.layout.two_line_list_item, android.R.id.text2, convertToString(list));
-            fromPlace.setAdapter(adapter);
-            toPlace.setAdapter(adapter);
+                .getStopsWithDestinations().observe(this, items -> {
+            fromPlace.setAdapter(new StopListAdapter(getActivity(), items));
+            toPlace.setAdapter(new StopListAdapter(getActivity(), items));
         });
     }
 
-    private List<String> convertToString(List<StopWithDestination> input) {
-        List<String> result = new ArrayList<>();
-        for (StopWithDestination s : input) {
-            result.add(s.toString());
-        }
-        return result;
-    }
 
     @Override
     public void onResume() {

@@ -1,4 +1,4 @@
-package hu.unideb.bus.utils;
+package hu.unideb.bus.ui;
 
 import android.content.Context;
 import android.graphics.Color;

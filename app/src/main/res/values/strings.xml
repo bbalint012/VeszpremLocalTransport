@@ -15,6 +15,7 @@
     <string name="tripPlanner">Trip Planner</string>
     <string name="fromPlace">From Place</string>
     <string name="toPlace">To Place</string>
+    <string name="plsZoom">Zoom in to show stops.</string>
 
     <!--tests-->
     <string name="testTextView">The test text view.</string>

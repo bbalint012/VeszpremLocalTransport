@@ -1,6 +1,7 @@
 package hu.unideb.bus.room.model;
 
 import androidx.annotation.NonNull;
+import androidx.room.Ignore;
 
 public class StopWithDestination {
     private String name;
@@ -9,6 +10,7 @@ public class StopWithDestination {
     public StopWithDestination() {
     }
 
+    @Ignore
     public StopWithDestination(String name, String destination) {
         this.name = name;
         this.destination = destination;

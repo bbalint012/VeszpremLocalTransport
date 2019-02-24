@@ -30,10 +30,6 @@ public class Utils {
         Toolbar mToolbar = (Toolbar) view.findViewById(toolbarId);
         activity.setSupportActionBar(mToolbar);
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        //TODO: search btn to toolbar
-        /*ImageButton btnAdd = (ImageButton) view.findViewById(R.id.btnAdd);
-        btnAdd.setOnClickListener(v -> activity.startActivity(new Intent(activity, CreateMotopoiActivity.class)));*/
     }
 
     public static int getActionBarHeight(Context context) {

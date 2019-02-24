@@ -2,6 +2,7 @@ package hu.unideb.bus.app.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -31,6 +33,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -45,7 +48,7 @@ import hu.unideb.bus.R;
 import hu.unideb.bus.asynctask.StopTask;
 import hu.unideb.bus.room.BusRepository;
 import hu.unideb.bus.room.model.RouteEntity;
-import hu.unideb.bus.utils.MarkerInfoWindowAdapter;
+import hu.unideb.bus.ui.MarkerInfoWindowAdapter;
 import hu.unideb.bus.utils.SharedPrefUtils;
 import hu.unideb.bus.utils.Utils;
 
@@ -57,6 +60,7 @@ public class MapViewFragment extends Fragment
     private final LatLng DEFAULT_LOCATION = new LatLng(47.09222, 17.91232);
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final float DEFAULT_ZOOM = 15;
+    private Snackbar snackbar;
 
     private MapView mMapView;
     private GoogleMap mMap;
@@ -69,7 +73,7 @@ public class MapViewFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_mapview, container, false);
-        Utils.setToolbar((AppCompatActivity) getActivity(), this, rootView, R.id.tripPlannerToolbar);
+        Utils.setToolbar((AppCompatActivity) getActivity(), this, rootView, R.id.mapViewToolbar);
 
         mRepoInstance = BusRepository.getInstance(getActivity());
         mMapView = (MapView) rootView.findViewById(R.id.tripPlannerMapView);
@@ -142,8 +146,11 @@ public class MapViewFragment extends Fragment
 
         mCurrentZoom = mMap.getCameraPosition().zoom;
         if (mCurrentZoom < DEFAULT_ZOOM) {
+            showSnackBar(getView());
             mMap.clear();
             return;
+        } else {
+            dismissSnackBar();
         }
 
         VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
@@ -256,7 +263,8 @@ public class MapViewFragment extends Fragment
             location.setLatitude(DEFAULT_LOCATION.latitude);
             location.setLongitude(DEFAULT_LOCATION.longitude);
         }
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), mCurrentZoom));
+        mMap.animateCamera(CameraUpdateFactory
+                .newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM));
     }
 
 
@@ -264,7 +272,28 @@ public class MapViewFragment extends Fragment
         Marker m = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(stop.getLat(), stop.getLon()))
                 .title(stop.getName())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));   //todo: marker rotation az iránynak megfelelően?
         m.setTag(routes);
+    }
+
+    private void showSnackBar(View view) {
+        if (snackbar != null && snackbar.isShown()) {
+            return;
+        }
+
+        snackbar = Snackbar.make(view, getResources().getString(R.string.plsZoom), Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("ZOOM", v ->
+                onMyLocationButtonClick()
+        );
+
+        TextView text = (TextView) snackbar.getView().findViewById(R.id.snackbar_text);
+        text.setTextColor(Color.WHITE);
+        snackbar.show();
+    }
+
+    private void dismissSnackBar() {
+        if (snackbar != null && snackbar.isShown()) {
+            snackbar.dismiss();
+        }
     }
 }
