@@ -34,7 +34,7 @@ import hu.unideb.bus.R;
 import hu.unideb.bus.apicall.TripRequest;
 import hu.unideb.bus.asynctask.TripPlannerTask;
 import hu.unideb.bus.room.BusRepository;
-import hu.unideb.bus.ui.StopListAdapter;
+import hu.unideb.bus.ui.StopListAutoCompleteAdapter;
 import hu.unideb.bus.utils.LocationUtil;
 import hu.unideb.bus.utils.Utils;
 
@@ -128,7 +128,7 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
     }
 
     private List<Leg> getItineraries() {
-        //TODO: a megállók kiválasztásakor el tudjam kérni a megállóhoz tartozó lovation-t
+        //TODO: a Megálló kiválasztása után el kéne kérni a megállóhoz tartozó location-t
 
         TripPlannerTask tripPlannerTask = new TripPlannerTask();
         List<Itinerary> result = tripPlannerTask.getTripPlan(
@@ -140,8 +140,8 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
     private void setAutoCompleteTextViews() {
         BusRepository.getInstance(getActivity())
                 .getStopsWithDestinations().observe(this, items -> {
-            fromPlace.setAdapter(new StopListAdapter(getActivity(), items));
-            toPlace.setAdapter(new StopListAdapter(getActivity(), items));
+            fromPlace.setAdapter(new StopListAutoCompleteAdapter(getActivity(), items));
+            toPlace.setAdapter(new StopListAutoCompleteAdapter(getActivity(), items));
         });
     }
 

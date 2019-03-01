@@ -17,12 +17,12 @@ import androidx.annotation.Nullable;
 import hu.unideb.bus.R;
 import hu.unideb.bus.room.model.StopWithDestination;
 
-public class StopListAdapter extends ArrayAdapter<StopWithDestination> {
+public class StopListAutoCompleteAdapter extends ArrayAdapter<StopWithDestination> {
     private Context context;
     private List<StopWithDestination> items;
     private List<StopWithDestination> filteredItems = new ArrayList<>();
 
-    public StopListAdapter(@NonNull Context context, List<StopWithDestination> items) {
+    public StopListAutoCompleteAdapter(@NonNull Context context, List<StopWithDestination> items) {
         super(context, R.layout.custom_autocomplete_layout, items);
         this.context = context;
         this.items = items;
@@ -58,11 +58,11 @@ public class StopListAdapter extends ArrayAdapter<StopWithDestination> {
     }
 
     private class ItemFilter extends Filter {
-        private StopListAdapter adapter;
+        private StopListAutoCompleteAdapter adapter;
         private List<StopWithDestination> originalItems;
         private List<StopWithDestination> filteredItems;
 
-        ItemFilter(StopListAdapter adapter, List<StopWithDestination> originalItems) {
+        ItemFilter(StopListAutoCompleteAdapter adapter, List<StopWithDestination> originalItems) {
             super();
             this.adapter = adapter;
             this.originalItems = originalItems;
