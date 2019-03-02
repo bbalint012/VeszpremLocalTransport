@@ -132,6 +132,7 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
             return new ArrayList<>();
         }
 
+        
         return result.get(0).legs;
     }
 
