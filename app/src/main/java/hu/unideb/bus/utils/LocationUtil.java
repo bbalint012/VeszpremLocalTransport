@@ -26,6 +26,7 @@ public class LocationUtil {
                 result |= (b & 0x1f) << shift;
                 shift += 5;
             } while (b >= 0x20);
+
             int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
             lat += dlat;
 
@@ -36,6 +37,7 @@ public class LocationUtil {
                 result |= (b & 0x1f) << shift;
                 shift += 5;
             } while (b >= 0x20);
+
             int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
             lng += dlng;
 

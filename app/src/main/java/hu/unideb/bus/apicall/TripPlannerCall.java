@@ -29,11 +29,16 @@ public class TripPlannerCall {
         try {
             retrofit2.Response<Response> response = call.execute();
 
-            if (response.isSuccessful() && response.body() != null) {
+            if (response.isSuccessful() &&
+                    response.body() != null &&
+                    response.body().getError() == null) {
                 return response.body().getPlan().getItinerary();
             } else {
-                Log.e(TAG, "getTripPlan() DOES NOT success!!" + response.errorBody());
                 call.cancel();
+                Log.e(TAG, "getTripPlan() DOES NOT success!!" + response.errorBody());
+                if (response.body().getError() != null) {
+                    Log.e(TAG, response.body().getError().getMsg());
+                }
             }
 
         } catch (IOException e) {

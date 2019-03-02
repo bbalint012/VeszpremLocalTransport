@@ -12,7 +12,7 @@ import hu.unideb.bus.room.dao.StopDao;
 import hu.unideb.bus.room.model.RouteEntity;
 import hu.unideb.bus.room.model.RouteStopJoin;
 import hu.unideb.bus.room.model.StopEntity;
-import hu.unideb.bus.room.model.StopWithDestination;
+import hu.unideb.bus.room.model.AutoCompleteItem;
 
 public class BusRepository {
     private static BusRepository INSTANCE;
@@ -61,7 +61,7 @@ public class BusRepository {
         return stopDao.getAllStops();
     }
 
-    public LiveData<List<StopWithDestination>> getStopsWithDestinations() {
+    public LiveData<List<AutoCompleteItem>> getStopsWithDestinations() {
         return stopDao.getStopsWithDestinations();
     }
 

@@ -8,7 +8,6 @@ import android.widget.Toast;
 import java.util.List;
 
 import hu.promera.api.responses.Route;
-import hu.promera.api.responses.Stop;
 import hu.unideb.bus.R;
 import hu.unideb.bus.apicall.RouteCall;
 import hu.unideb.bus.apicall.StopCall;
@@ -35,9 +34,6 @@ public class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
 
         if (routes != null) {
             for (Route route : routes) {
-                if (route.getId().equals("BKK_0662"))
-                    break;                                //TODO: DELETE THIS CONDITION
-
                 Log.d(TAG, "insert..." + route.getShortName());
                 repo.insertRoute(new RouteEntity(route));
 

@@ -15,14 +15,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import hu.unideb.bus.R;
-import hu.unideb.bus.room.model.StopWithDestination;
+import hu.unideb.bus.room.model.AutoCompleteItem;
 
-public class StopListAutoCompleteAdapter extends ArrayAdapter<StopWithDestination> {
+public class CustomAdapter extends ArrayAdapter<AutoCompleteItem> {
     private Context context;
-    private List<StopWithDestination> items;
-    private List<StopWithDestination> filteredItems = new ArrayList<>();
+    private List<AutoCompleteItem> items;
+    private List<AutoCompleteItem> filteredItems = new ArrayList<>();
 
-    public StopListAutoCompleteAdapter(@NonNull Context context, List<StopWithDestination> items) {
+    public CustomAdapter(@NonNull Context context, List<AutoCompleteItem> items) {
         super(context, R.layout.custom_autocomplete_layout, items);
         this.context = context;
         this.items = items;
@@ -31,6 +31,12 @@ public class StopListAutoCompleteAdapter extends ArrayAdapter<StopWithDestinatio
     @Override
     public int getCount() {
         return filteredItems.size();
+    }
+
+    @Nullable
+    @Override
+    public AutoCompleteItem getItem(int position) {
+        return filteredItems.get(position);
     }
 
     @NonNull
@@ -47,7 +53,7 @@ public class StopListAutoCompleteAdapter extends ArrayAdapter<StopWithDestinatio
         TextView stopName = (TextView) view.findViewById(R.id.stopName);
         TextView destination = (TextView) view.findViewById(R.id.destination);
 
-        StopWithDestination item = filteredItems.get(position);
+        AutoCompleteItem item = filteredItems.get(position);
         stopName.setText(item.getName());
         destination.setText(String.format("%s felé", item.getDestination()));
 
@@ -58,11 +64,11 @@ public class StopListAutoCompleteAdapter extends ArrayAdapter<StopWithDestinatio
     }
 
     private class ItemFilter extends Filter {
-        private StopListAutoCompleteAdapter adapter;
-        private List<StopWithDestination> originalItems;
-        private List<StopWithDestination> filteredItems;
+        private CustomAdapter adapter;
+        private List<AutoCompleteItem> originalItems;
+        private List<AutoCompleteItem> filteredItems;
 
-        ItemFilter(StopListAutoCompleteAdapter adapter, List<StopWithDestination> originalItems) {
+        ItemFilter(CustomAdapter adapter, List<AutoCompleteItem> originalItems) {
             super();
             this.adapter = adapter;
             this.originalItems = originalItems;
@@ -77,7 +83,7 @@ public class StopListAutoCompleteAdapter extends ArrayAdapter<StopWithDestinatio
                 filteredItems.addAll(originalItems);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
-                for (StopWithDestination s : originalItems) {
+                for (AutoCompleteItem s : originalItems) {
                     if (s.getName().toLowerCase().contains(filterPattern)) {
                         filteredItems.add(s);
                     }

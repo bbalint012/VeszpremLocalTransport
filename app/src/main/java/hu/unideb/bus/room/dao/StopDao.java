@@ -7,8 +7,8 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import hu.unideb.bus.room.model.AutoCompleteItem;
 import hu.unideb.bus.room.model.StopEntity;
-import hu.unideb.bus.room.model.StopWithDestination;
 
 @Dao
 public interface StopDao {
@@ -18,6 +18,6 @@ public interface StopDao {
     @Query("SELECT * FROM stops")
     LiveData<List<StopEntity>> getAllStops();
 
-    @Query("SELECT s.name, s.destination FROM stops s")
-    LiveData<List<StopWithDestination>> getStopsWithDestinations();
+    @Query("SELECT s.name, s.destination, s.lat, s.lon FROM stops s")
+    LiveData<List<AutoCompleteItem>> getStopsWithDestinations();
 }

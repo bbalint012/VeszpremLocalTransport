@@ -10,11 +10,16 @@
 
     <string name="downloadInProgress">The download is in progress.</string>
     <string name="downloadOK">The download is completed.</string>
+
     <string name="nearbyToolbarText">NEARBY</string>
     <string name="tripPlanningToolbarText">TRIP PLANNING</string>
+
     <string name="tripPlanner">Trip Planner</string>
     <string name="fromPlace">From Place</string>
     <string name="toPlace">To Place</string>
+    <string name="plsWriteSmth">Please enter the stops.</string>
+    <string name="sryRouteNotFound">Sorry, cannot find any route.</string>
+
     <string name="plsZoom">Zoom in to show stops.</string>
 
     <!--tests-->

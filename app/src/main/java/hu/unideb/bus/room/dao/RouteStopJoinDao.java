@@ -7,6 +7,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.RoomWarnings;
 import hu.unideb.bus.room.model.RouteEntity;
 import hu.unideb.bus.room.model.RouteStopJoin;
 import hu.unideb.bus.room.model.StopEntity;
@@ -19,6 +20,7 @@ public interface RouteStopJoinDao {
     @Query("SELECT * FROM routes " +
             "INNER JOIN route_stop_join ON routes.id = route_stop_join.routeId " +
             "WHERE route_stop_join.stopId = :stopId")
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     LiveData<List<RouteEntity>> getRoutesForStop(String stopId);
 
     @Query("SELECT * FROM stops " +

@@ -5,26 +5,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.opentripplanner.api.model.Itinerary;
 import org.opentripplanner.api.model.Leg;
-import org.opentripplanner.routing.core.TraverseMode;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,28 +35,34 @@ import hu.unideb.bus.R;
 import hu.unideb.bus.apicall.TripRequest;
 import hu.unideb.bus.asynctask.TripPlannerTask;
 import hu.unideb.bus.room.BusRepository;
-import hu.unideb.bus.ui.StopListAutoCompleteAdapter;
+import hu.unideb.bus.room.model.AutoCompleteItem;
+import hu.unideb.bus.ui.PolylineDrawer;
+import hu.unideb.bus.ui.CustomAdapter;
 import hu.unideb.bus.utils.LocationUtil;
 import hu.unideb.bus.utils.Utils;
 
 public class TripPlannerFragment extends Fragment implements OnMapReadyCallback {
     private final String TAG = this.getClass().getSimpleName();
 
-    AutoCompleteTextView fromPlace;
-    AutoCompleteTextView toPlace;
+    private AutoCompleteTextView fromPlace;
+    private AutoCompleteTextView toPlace;
+    private String fromPlaceLocation;
+    private String toPlaceLocation;
     private MapView mMapView;
     private GoogleMap mMap;
+    private PolylineDrawer polylineDrawer;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tip_planner, container, false);
-        Utils.setToolbar((AppCompatActivity) getActivity(), this, view, R.id.tripPlannerToolbar);
-        setSearchBtn(view);
-
         fromPlace = (AutoCompleteTextView) view.findViewById(R.id.fromPlace);
         toPlace = (AutoCompleteTextView) view.findViewById(R.id.toPlace);
         mMapView = (MapView) view.findViewById(R.id.tripPlannerMapView);
+
+        Utils.setToolbar((AppCompatActivity) getActivity(), this, view, R.id.tripPlannerToolbar);
+        setSearchBtn(view);
+        setupEditTextListeners();
 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
@@ -73,14 +80,8 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        polylineDrawer = new PolylineDrawer(getActivity(), mMap);
         setMapControls();
-    }
-
-    private void setSearchBtn(View view) {
-        ImageButton btnAdd = (ImageButton) view.findViewById(R.id.btnSearch);
-        btnAdd.setOnClickListener(v ->
-                showRouteOnMap()
-        );
     }
 
     private void setMapControls() {
@@ -90,61 +91,113 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback 
 
     private void showRouteOnMap() {
         final List<Leg> itinerary = getItineraries();
-
         if (itinerary.isEmpty()) {
+            noRouteFound();
             return;
         }
-        Marker firstTransitMarker = null;
 
         LatLngBounds.Builder builder = LatLngBounds.builder();
         for (Leg leg : itinerary) {
             List<LatLng> points = LocationUtil.decodePoly(leg.legGeometry.getPoints());
-
-            if (firstTransitMarker == null && TraverseMode.valueOf(leg.mode).isTransit()) {
-                firstTransitMarker = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(points.get(0).latitude, points.get(0).longitude))
-                        .title("first")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));
+            if (points.isEmpty()) {
+                return;
             }
 
-            if (!points.isEmpty()) {
-                float scaleFactor = getResources().getFraction(R.fraction.scaleFactor, 1, 1);
-                PolylineOptions options = new PolylineOptions()
-                        .addAll(points)
-                        .width(5 * scaleFactor)
-                        .color(getResources().getColor(R.color.blue));
-                mMap.addPolyline(options);
+            polylineDrawer.addMarkers(points);
+            polylineDrawer.draw(leg, points);
 
-                for (LatLng point : points) {
-                    builder.include(point);
-                }
+            for (LatLng point : points) {
+                builder.include(point);
             }
         }
 
         if (mMap != null) {
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 48));
         }
-
     }
 
     private List<Leg> getItineraries() {
-        //TODO: a Megálló kiválasztása után el kéne kérni a megállóhoz tartozó location-t
-
+        if (fromPlaceLocation == null || fromPlaceLocation.isEmpty() ||
+                toPlaceLocation == null || toPlaceLocation.isEmpty()) {
+            Utils.showToast(getActivity(), getResources().getString(R.string.plsWriteSmth), Toast.LENGTH_LONG);
+            return new ArrayList<>();
+        }
+        System.out.println(fromPlaceLocation);
         TripPlannerTask tripPlannerTask = new TripPlannerTask();
         List<Itinerary> result = tripPlannerTask.getTripPlan(
-                new TripRequest("47.52253,19.07229", "47.51473,19.04157", "1:02pm",
-                        "02-06-2019", "TRANSIT,WALK", "500", "false"));
+                new TripRequest(fromPlaceLocation, toPlaceLocation, getCurrentTime(),
+                        getCurrentDate(), "TRANSIT,WALK", "false"));
+
+        if (result.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         return result.get(0).legs;
+    }
+
+    private String getCurrentTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", new Locale("hu"));
+        return sdf.format(System.currentTimeMillis());
+    }
+
+    private String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", new Locale("hu"));
+        return sdf.format(System.currentTimeMillis());
     }
 
     private void setAutoCompleteTextViews() {
         BusRepository.getInstance(getActivity())
                 .getStopsWithDestinations().observe(this, items -> {
-            fromPlace.setAdapter(new StopListAutoCompleteAdapter(getActivity(), items));
-            toPlace.setAdapter(new StopListAutoCompleteAdapter(getActivity(), items));
+            CustomAdapter adapter = new CustomAdapter(getActivity(), items);
+            fromPlace.setAdapter(adapter);
+            fromPlace.setOnItemClickListener((parent, v, position, id) -> {
+                fromPlaceLocation = adapter.getItem(position).getLocation();
+            });
+
+            CustomAdapter adapter2 = new CustomAdapter(getActivity(), items);
+            toPlace.setAdapter(adapter2);
+            toPlace.setOnItemClickListener((parent, v, position, id) -> {
+                toPlaceLocation = adapter2.getItem(position).getLocation();
+            });
         });
     }
 
+    private void setSearchBtn(View view) {
+        ImageButton btnAdd = (ImageButton) view.findViewById(R.id.btnSearch);
+        btnAdd.setOnClickListener(v ->
+                showRouteOnMap()
+        );
+    }
+
+    private void setupEditTextListeners() {
+        toPlace.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                Utils.hideKeyboard(v, getActivity());
+                showRouteOnMap();
+                handled = true;
+            }
+            return handled;
+        });
+
+        fromPlace.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                Utils.hideKeyboard(v, getActivity());
+            }
+        });
+
+        toPlace.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                Utils.hideKeyboard(v, getActivity());
+            }
+        });
+    }
+
+    private void noRouteFound() {
+        fromPlace.setText("");
+        toPlace.setText("");
+        Utils.showToast(getActivity(), getResources().getString(R.string.sryRouteNotFound), Toast.LENGTH_LONG);
+    }
 
     @Override
     public void onResume() {

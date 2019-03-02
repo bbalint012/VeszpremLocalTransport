@@ -9,19 +9,17 @@ public class TripRequest {
     private String time;
     private String date;
     private String mode;
-    private String maxWalkDistance;
     private String arriveBy;
 
     public TripRequest() {
     }
 
-    public TripRequest(String fromPlace, String toPlace, String time, String date, String mode, String maxWalkDistance, String arriveBy) {
+    public TripRequest(String fromPlace, String toPlace, String time, String date, String mode, String arriveBy) {
         this.fromPlace = fromPlace;
         this.toPlace = toPlace;
         this.time = time;
         this.date = date;
         this.mode = mode;
-        this.maxWalkDistance = maxWalkDistance;
         this.arriveBy = arriveBy;
     }
 
@@ -32,7 +30,6 @@ public class TripRequest {
         queryMap.put("time", time);
         queryMap.put("date", date);
         queryMap.put("mode", mode);
-        queryMap.put("maxWalkDistance", maxWalkDistance);
         queryMap.put("arriveBy", arriveBy);
         return queryMap;
     }
@@ -75,14 +72,6 @@ public class TripRequest {
 
     public void setMode(String mode) {
         this.mode = mode;
-    }
-
-    public String getMaxWalkDistance() {
-        return maxWalkDistance;
-    }
-
-    public void setMaxWalkDistance(String maxWalkDistance) {
-        this.maxWalkDistance = maxWalkDistance;
     }
 
     public String getArriveBy() {

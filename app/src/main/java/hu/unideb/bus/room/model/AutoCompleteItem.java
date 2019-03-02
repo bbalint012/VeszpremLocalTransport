@@ -1,19 +1,14 @@
 package hu.unideb.bus.room.model;
 
 import androidx.annotation.NonNull;
-import androidx.room.Ignore;
 
-public class StopWithDestination {
+public class AutoCompleteItem {
     private String name;
     private String destination;
+    private Double lat;
+    private Double lon;
 
-    public StopWithDestination() {
-    }
-
-    @Ignore
-    public StopWithDestination(String name, String destination) {
-        this.name = name;
-        this.destination = destination;
+    public AutoCompleteItem() {
     }
 
     public String getName() {
@@ -30,6 +25,26 @@ public class StopWithDestination {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLon() {
+        return lon;
+    }
+
+    public void setLon(Double lon) {
+        this.lon = lon;
+    }
+
+    public String getLocation() {
+        return String.format("%f,%f", this.lat, this.lon);
     }
 
     @NonNull
