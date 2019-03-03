@@ -62,7 +62,7 @@ public class MarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapter, Goo
         if (!(tag instanceof List<?>)) {
             return null;
         }
-        List<?> listTag = (List)tag;
+        List<?> listTag = (List) tag;
         if (listTag.isEmpty() || !(listTag.get(0) instanceof RouteEntity)) {
             return null;
         }

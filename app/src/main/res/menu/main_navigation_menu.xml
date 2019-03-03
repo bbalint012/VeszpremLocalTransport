@@ -3,10 +3,10 @@
     <item
         android:id="@+id/navigation_map"
         android:icon="@drawable/ic_map"
-        android:title="@string/title_map" />
+        android:title="@string/menu_map" />
 
     <item
         android:id="@+id/navigation_planner"
         android:icon="@drawable/ic_trip_planner"
-        android:title="@string/title_planner" />
+        android:title="@string/menu_planner" />
 </menu>

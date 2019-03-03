@@ -31,6 +31,14 @@ public final class SharedPrefUtils {
         editor.apply();
     }
 
+    public static String getFromPlaceLocation(Context context) {
+        return getInstance(context).getString(SharedPrefKey.FROM_PLACE_LOCATION.getKey(), "");
+    }
+
+    public static String getToPlaceLocation(Context context) {
+        return getInstance(context).getString(SharedPrefKey.TO_PLACE_LOCATION.getKey(), "");
+    }
+
     public static void clearSharedPreferences(Context context) {
         SharedPreferences.Editor editor = getInstance(context).edit();
         editor.clear();

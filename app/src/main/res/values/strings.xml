@@ -5,8 +5,14 @@
     <string name="apiKey">TEST</string>
     <string name="agencyId">BKK</string>
 
-    <string name="title_map">Map</string>
-    <string name="title_planner">Trip Planner</string>
+    <!--Bottom Nav Bar-->
+    <string name="menu_map">Map</string>
+    <string name="menu_planner">Trip Planner</string>
+    <string name="menu_results">Results</string>
+    <string name="menu_list">List</string>
+
+    <string name="travelFromB">Travel from</string>
+    <string name="travelToB">Travel to</string>
 
     <string name="downloadInProgress">The download is in progress.</string>
     <string name="downloadOK">The download is completed.</string>
@@ -16,6 +22,7 @@
 
     <string name="tripPlanner">Trip Planner</string>
     <string name="fromPlace">From Place</string>
+    <string name="minutes">min</string>
     <string name="toPlace">To Place</string>
     <string name="plsWriteSmth">Please enter the stops.</string>
     <string name="sryRouteNotFound">Sorry, cannot find any route.</string>

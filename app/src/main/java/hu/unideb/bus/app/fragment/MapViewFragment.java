@@ -76,7 +76,7 @@ public class MapViewFragment extends Fragment
         Utils.setToolbar((AppCompatActivity) getActivity(), this, rootView, R.id.mapViewToolbar);
 
         mRepoInstance = BusRepository.getInstance(getActivity());
-        mMapView = (MapView) rootView.findViewById(R.id.tripPlannerMapView);
+        mMapView = (MapView) rootView.findViewById(R.id.mainMapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
