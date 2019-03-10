@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import hu.unideb.bus.R;
 import hu.unideb.bus.asynctask.PopulateDbAsyncTask;
-import hu.unideb.bus.room.BusRepository;
 import hu.unideb.bus.utils.SharedPrefUtils;
 
 public class SplashActivity extends AppCompatActivity {

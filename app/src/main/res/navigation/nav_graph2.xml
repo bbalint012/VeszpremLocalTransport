@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph2"
+    app:startDestination="@id/resultsFragment">
+
+    <fragment
+        android:id="@+id/resultsFragment"
+        android:name="hu.unideb.bus.app.fragment.ResultsFragment"
+        android:label="fragment_results"
+        tools:layout="@layout/fragment_results" />
+    <fragment
+        android:id="@+id/routeDrawerFragment"
+        android:name="hu.unideb.bus.app.fragment.RouteDrawerFragment"
+        android:label="fragment_route_drawer"
+        tools:layout="@layout/fragment_route_drawer" />
+</navigation>
