@@ -1,21 +1,19 @@
 package hu.unideb.bus.utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import hu.unideb.bus.R;
 
 public class Utils {
     private static Toast toast;
@@ -34,9 +32,11 @@ public class Utils {
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
-    public static void setMapControls(GoogleMap map) {
+    public static void setMapControls(Context context, GoogleMap map) {
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setZoomGesturesEnabled(true);
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(SharedPrefUtils.getDefaultLatLng(context), 10));
+
     }
 
     public static int getActionBarHeight(Context context) {

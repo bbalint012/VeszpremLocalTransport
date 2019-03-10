@@ -3,7 +3,6 @@ package hu.unideb.bus.app.fragment;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,51 +13,39 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.opentripplanner.api.model.Itinerary;
-
 import java.io.IOException;
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import hu.unideb.bus.R;
-import hu.unideb.bus.apicall.TripRequest;
 import hu.unideb.bus.app.RouteActivity;
-import hu.unideb.bus.asynctask.TripPlannerTask;
 import hu.unideb.bus.room.BusRepository;
 import hu.unideb.bus.ui.CustomAdapter;
-import hu.unideb.bus.ui.MarkerInfoWindowWithButtons;
 import hu.unideb.bus.utils.SharedPrefKey;
 import hu.unideb.bus.utils.SharedPrefUtils;
 import hu.unideb.bus.utils.Utils;
 
-public class TripPlannerFragment extends Fragment implements OnMapReadyCallback, OnMapLongClickListener {
+public class TripPlannerFragment extends Fragment implements OnMapReadyCallback, OnMapLongClickListener, OnInfoWindowClickListener {
     private final String TAG = this.getClass().getSimpleName();
-
     private AutoCompleteTextView fromPlace;
     private AutoCompleteTextView toPlace;
     private String fromPlaceLocation;
     private String toPlaceLocation;
-    private Marker fromMarker;
-    private Marker toMarker;
     private MapView mMapView;
     private GoogleMap mMap;
 
@@ -90,10 +77,9 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setInfoWindowAdapter(new MarkerInfoWindowWithButtons(getActivity(), fromPlace, toPlace, fromMarker, toMarker));
+        Utils.setMapControls(getActivity(), mMap);
         mMap.setOnMapLongClickListener(this);
-        Utils.setMapControls(mMap);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(47.4815, 19.1299), 10));
+        mMap.setOnInfoWindowClickListener(this);
     }
 
     @Override
@@ -106,9 +92,23 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
         Marker m = mMap.addMarker(new MarkerOptions()
                 .position(clickedPosition)
                 .title(address)
+                .snippet("ez a snippet")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));
         m.showInfoWindow();
         setLocations(clickedPosition);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if (fromPlace.getText().toString().equals("")) {
+            fromPlace.setText(marker.getTitle());
+        } else if (toPlace.getText().toString().equals("")) {
+            toPlace.setText(marker.getTitle());
+        } else {
+            marker.setVisible(false);
+        }
+
+        marker.hideInfoWindow();
     }
 
     private String getAddressFromLocation(LatLng latLng) {
@@ -189,15 +189,21 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
         });
     }
 
-    private void noRouteFound() {
+    private void refreshState() {
+        mMap.clear();
+        Utils.setMapControls(getActivity(), mMap);
         fromPlace.setText("");
         toPlace.setText("");
-        Utils.showToast(getActivity(), getResources().getString(R.string.sryRouteNotFound), Toast.LENGTH_LONG);
+        fromPlaceLocation = "";
+        toPlaceLocation = "";
     }
 
     @Override
     public void onResume() {
         mMapView.onResume();
+        if (mMap != null && fromPlaceLocation != null && !fromPlaceLocation.isEmpty()) {
+            refreshState();
+        }
         super.onResume();
     }
 

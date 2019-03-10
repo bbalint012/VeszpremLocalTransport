@@ -54,6 +54,10 @@ public class CustomAdapter extends ArrayAdapter<AutoCompleteItem> {
         TextView destination = (TextView) view.findViewById(R.id.destination);
 
         AutoCompleteItem item = filteredItems.get(position);
+        if (item == null) {
+            return view;
+        }
+
         stopName.setText(item.getName());
         destination.setText(String.format("%s felé", item.getDestination()));
 

@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import hu.unideb.bus.R;
 import hu.unideb.bus.ui.PolylineDrawer;
 import hu.unideb.bus.utils.LocationUtil;
+import hu.unideb.bus.utils.SharedPrefUtils;
 import hu.unideb.bus.utils.Utils;
 
 public class RouteDrawerFragment extends Fragment implements OnMapReadyCallback {
@@ -37,9 +38,8 @@ public class RouteDrawerFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_route_drawer, container, false);
-        mMapView = (MapView) view.findViewById(R.id.routeDrawerMapView);
-
         Utils.setToolbar((AppCompatActivity) getActivity(), this, view, R.id.routeDrawerToolbar);
+        mMapView = (MapView) view.findViewById(R.id.routeDrawerMapView);
 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
@@ -57,13 +57,14 @@ public class RouteDrawerFragment extends Fragment implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         polylineDrawer = new PolylineDrawer(getActivity(), mMap);
-        Utils.setMapControls(mMap);
+        Utils.setMapControls(getActivity(), mMap);
+        showRouteOnMap();
     }
 
-    /*private void showRouteOnMap() {
-        final List<Leg> itinerary = getItineraries();
+    @SuppressWarnings("unchecked")
+    private void showRouteOnMap() {
+        final List<Leg> itinerary = getItinerary();
         if (itinerary.isEmpty()) {
-            noRouteFound();
             return;
         }
 
@@ -85,7 +86,11 @@ public class RouteDrawerFragment extends Fragment implements OnMapReadyCallback 
         if (mMap != null) {
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 48));
         }
-    }*/
+    }
+
+    private List<Leg> getItinerary() {
+        return SharedPrefUtils.getItinerary(getActivity());
+    }
 
     @Override
     public void onResume() {

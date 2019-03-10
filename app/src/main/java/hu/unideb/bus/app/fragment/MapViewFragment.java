@@ -22,7 +22,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraIdleListener;
 import com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.MapView;
@@ -52,8 +51,7 @@ import hu.unideb.bus.ui.MarkerInfoWindowAdapter;
 import hu.unideb.bus.utils.SharedPrefUtils;
 import hu.unideb.bus.utils.Utils;
 
-public class MapViewFragment extends Fragment
-        implements OnMapReadyCallback, OnMyLocationButtonClickListener, OnMapClickListener,
+public class MapViewFragment extends Fragment implements OnMapReadyCallback, OnMyLocationButtonClickListener,
         OnCameraMoveStartedListener, OnCameraIdleListener, OnMarkerClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
@@ -119,15 +117,6 @@ public class MapViewFragment extends Fragment
     public boolean onMyLocationButtonClick() {
         getLastKnownLocation();
         return true;
-    }
-
-    @Override
-    public void onMapClick(LatLng point) {
-       /* TODO: navigálás innen?
-        Location l = new Location("tappedPointLocation");
-        l.setLatitude(point.latitude);
-        l.setLongitude(point.longitude);
-        moveCamera(l);*/
     }
 
     @Override
@@ -232,7 +221,6 @@ public class MapViewFragment extends Fragment
         mMap.setOnCameraIdleListener(this);
         mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(getActivity()));
         mMap.setOnMarkerClickListener(this);
-        //TODO: mMap.setOnMapClickListener(this); navigálás innen
     }
 
 
