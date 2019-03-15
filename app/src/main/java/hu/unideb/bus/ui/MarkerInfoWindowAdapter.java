@@ -22,7 +22,6 @@ public class MarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapter, Goo
         this.context = context;
     }
 
-
     @Override
     public View getInfoWindow(Marker marker) {
         return null;

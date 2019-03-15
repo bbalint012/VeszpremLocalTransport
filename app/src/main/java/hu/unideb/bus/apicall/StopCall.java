@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import hu.promera.api.responses.Stop;
-import hu.promera.api.responses.StopGroup;
-import hu.promera.api.responses.StopsForLocationResponse;
-import hu.promera.api.responses.StopsForRouteResponse;
-import hu.promera.api.service.OneBusAway;
+import hu.unideb.api.responses.Stop;
+import hu.unideb.api.responses.StopGroup;
+import hu.unideb.api.responses.StopsForLocationResponse;
+import hu.unideb.api.responses.StopsForRouteResponse;
+import hu.unideb.api.service.OneBusAway;
 import hu.unideb.bus.room.model.StopEntity;
 import retrofit2.Call;
 import retrofit2.Response;

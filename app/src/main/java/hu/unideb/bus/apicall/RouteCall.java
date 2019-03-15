@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import hu.promera.api.responses.Route;
-import hu.promera.api.responses.RoutesForAgencyResponse;
-import hu.promera.api.service.OneBusAway;
+import hu.unideb.api.responses.Route;
+import hu.unideb.api.responses.RoutesForAgencyResponse;
+import hu.unideb.api.service.OneBusAway;
 import retrofit2.Call;
 import retrofit2.Response;
 

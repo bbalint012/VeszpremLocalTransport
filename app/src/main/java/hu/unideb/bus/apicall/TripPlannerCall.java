@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import hu.promera.otp.service.OpenTripPlanner;
+import hu.unideb.otp.service.OpenTripPlanner;
 import retrofit2.Call;
 
 public class TripPlannerCall {

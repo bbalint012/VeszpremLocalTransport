@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import hu.promera.api.responses.Stop;
+import hu.unideb.api.responses.Stop;
 
 @Entity(tableName = "stops")
 public class StopEntity {
