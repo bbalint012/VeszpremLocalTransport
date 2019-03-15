@@ -26,5 +26,6 @@ public interface RouteStopJoinDao {
     @Query("SELECT * FROM stops " +
             "INNER JOIN route_stop_join ON stops.id = route_stop_join.stopId " +
             "WHERE route_stop_join.routeId = :routeId")
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     LiveData<List<StopEntity>> getStopsForRoutes(String routeId);
 }

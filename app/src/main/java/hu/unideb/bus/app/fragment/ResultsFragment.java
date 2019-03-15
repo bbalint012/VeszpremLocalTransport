@@ -64,6 +64,7 @@ public class ResultsFragment extends Fragment {
         mRecyclerView.setAdapter(adapter);
     }
 
+    @SuppressWarnings("unchecked")
     private void setOnClickListener(View v) {
         final ArrayList<Leg> legs = (ArrayList<Leg>) (v.findViewById(R.id.startTime).getTag());
         SharedPrefUtils.saveItinerary(getActivity(), legs);
