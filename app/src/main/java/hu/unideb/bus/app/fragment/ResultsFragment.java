@@ -32,7 +32,6 @@ public class ResultsFragment extends Fragment {
 
     @Nullable
     @Override
-    @SuppressWarnings("unchecked")
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_results, container, false);
         setupRecyclerView(view);

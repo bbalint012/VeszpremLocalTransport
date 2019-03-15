@@ -92,22 +92,23 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
         Marker m = mMap.addMarker(new MarkerOptions()
                 .position(clickedPosition)
                 .title(address)
-                .snippet("ez a snippet")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));
         m.showInfoWindow();
-        setLocations(clickedPosition);
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
         if (fromPlace.getText().toString().equals("")) {
             fromPlace.setText(marker.getTitle());
+            fromPlaceLocation = String.format("%f,%f", marker.getPosition().latitude, marker.getPosition().longitude);
         } else if (toPlace.getText().toString().equals("")) {
             toPlace.setText(marker.getTitle());
+            toPlaceLocation = String.format("%f,%f", marker.getPosition().latitude, marker.getPosition().longitude);
         } else {
-            marker.setVisible(false);
+            refreshState();
+            this.onMapLongClick(marker.getPosition());
+            this.onInfoWindowClick(marker);
         }
-
         marker.hideInfoWindow();
     }
 
@@ -122,11 +123,6 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
         String address = addresses.get(0).getAddressLine(0);
         String substring = address.substring(0, address.lastIndexOf(","));
         return substring;
-    }
-
-    private void setLocations(LatLng latLng) {
-        fromPlaceLocation = String.format("%f,%f", latLng.latitude, latLng.longitude);
-        toPlaceLocation = String.format("%f,%f", latLng.latitude, latLng.longitude);
     }
 
     private void getItineraries() {
@@ -146,15 +142,13 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
                 .getStopsWithDestinations().observe(this, items -> {
             CustomAdapter adapter = new CustomAdapter(getActivity(), items);
             fromPlace.setAdapter(adapter);
-            fromPlace.setOnItemClickListener((parent, v, position, id) -> {
-                fromPlaceLocation = adapter.getItem(position).getLocation();
-            });
+            fromPlace.setOnItemClickListener((parent, v, position, id) ->
+                    fromPlaceLocation = adapter.getItem(position).getLocation());
 
             CustomAdapter adapter2 = new CustomAdapter(getActivity(), items);
             toPlace.setAdapter(adapter2);
-            toPlace.setOnItemClickListener((parent, v, position, id) -> {
-                toPlaceLocation = adapter2.getItem(position).getLocation();
-            });
+            toPlace.setOnItemClickListener((parent, v, position, id) ->
+                    toPlaceLocation = adapter2.getItem(position).getLocation());
         });
     }
 

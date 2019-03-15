@@ -147,7 +147,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, OnM
 
         StopTask stopTask = new StopTask();
         List<Stop> stopsForVisibleRegion = stopTask.getStopsForLocation(center);
-        if (stopsForVisibleRegion == null) {
+        if (stopsForVisibleRegion == null || stopsForVisibleRegion.isEmpty()) {
             return;
         }
 
