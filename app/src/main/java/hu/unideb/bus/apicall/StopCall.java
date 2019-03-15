@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class StopCall {
             Response<StopsForRouteResponse> response = call.execute();
 
             if (response.isSuccessful() && response.body() != null) {
-                return setStopEntities(response);
+                return setStopsForRouteEntities(response);
             } else {
                 Log.e(TAG, "getStopsForRoute() DOES NOT success!!" + response.errorBody());
                 call.cancel();
@@ -46,14 +47,14 @@ public class StopCall {
         return new ArrayList<>();
     }
 
-    public List<Stop> getStopsForLocation(LatLng center) {
+    public List<StopEntity> getStopsForLocation(LatLng center) {
         Call<StopsForLocationResponse> call = api.getStopsForLocation(ApiClient.getApiKey(), center.latitude, center.longitude);
 
         try {
             Response<StopsForLocationResponse> response = call.execute();
 
             if (response.isSuccessful() && response.body() != null) {
-                return response.body().getData().getList();
+                return setStopsForLocationEntities(response);
             } else {
                 Log.e(TAG, "getStopsForLocation DOES NOT success!!" + response.errorBody());
                 call.cancel();
@@ -66,13 +67,15 @@ public class StopCall {
     }
 
 
-    private List<StopEntity> setStopEntities(Response<StopsForRouteResponse> response) {
+    private List<StopEntity> setStopsForRouteEntities(Response<StopsForRouteResponse> response) {
         List<StopEntity> entities = new LinkedList<>();
         List<Stop> stops = response.body().getData().getReferences().getStops();
         List<StopGroup> stopGroups = response.body().getData().getEntry().getStopGroupings().get(0).getStopGroups();
 
         for (Stop s : stops) {
             StopEntity entity = new StopEntity(s);
+            entity.setName(decodeToUTF8(s.getName()));
+
             if (stopGroups.get(0).getStopIds().contains(s.getId())) {
                 entity.setDestination(stopGroups.get(0).getName().getDestinationName());
             } else {
@@ -82,5 +85,21 @@ public class StopCall {
         }
 
         return entities;
+    }
+
+    private List<StopEntity> setStopsForLocationEntities(Response<StopsForLocationResponse> response) {
+        List<StopEntity> entities = new LinkedList<>();
+        List<Stop> stops = response.body().getData().getList();
+
+        for (Stop s : stops) {
+            StopEntity entity = new StopEntity(s);
+            entity.setName(decodeToUTF8(s.getName()));
+            entities.add(entity);
+        }
+        return entities;
+    }
+
+    private String decodeToUTF8(String original) {
+        return new String(original.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
     }
 }

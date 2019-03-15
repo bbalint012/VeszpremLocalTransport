@@ -42,11 +42,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import hu.promera.api.responses.Stop;
 import hu.unideb.bus.R;
 import hu.unideb.bus.asynctask.StopTask;
 import hu.unideb.bus.room.BusRepository;
 import hu.unideb.bus.room.model.RouteEntity;
+import hu.unideb.bus.room.model.StopEntity;
 import hu.unideb.bus.ui.MarkerInfoWindowAdapter;
 import hu.unideb.bus.utils.SharedPrefUtils;
 import hu.unideb.bus.utils.Utils;
@@ -146,12 +146,12 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, OnM
         LatLng center = visibleRegion.latLngBounds.getCenter();
 
         StopTask stopTask = new StopTask();
-        List<Stop> stopsForVisibleRegion = stopTask.getStopsForLocation(center);
+        List<StopEntity> stopsForVisibleRegion = stopTask.getStopsForLocation(center);
         if (stopsForVisibleRegion == null || stopsForVisibleRegion.isEmpty()) {
             return;
         }
 
-        for (Stop stop : stopsForVisibleRegion) {
+        for (StopEntity stop : stopsForVisibleRegion) {
             mRepoInstance.getRoutesForStop(stop.getId()).observe(this, routes ->
                     createStopMarkers(stop, routes)
             );
@@ -256,7 +256,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, OnM
     }
 
 
-    private void createStopMarkers(Stop stop, List<RouteEntity> routes) {
+    private void createStopMarkers(StopEntity stop, List<RouteEntity> routes) {
         Marker m = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(stop.getLat(), stop.getLon()))
                 .title(stop.getName())
