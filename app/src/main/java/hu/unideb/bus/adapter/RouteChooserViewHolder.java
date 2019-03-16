@@ -1,8 +1,9 @@
 package hu.unideb.bus.adapter;
 
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.nex3z.flowlayout.FlowLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +16,7 @@ public class RouteChooserViewHolder extends RecyclerView.ViewHolder implements V
     protected TextView endTime;
     protected TextView walkDistance;
     protected TextView duration;
-    protected LinearLayout infoIconsLayout;
+    protected FlowLayout infoIconsLayout;
 
     RouteChooserViewHolder(@NonNull View itemView, RecyclerViewClickListener listener) {
         super(itemView);
@@ -34,6 +35,6 @@ public class RouteChooserViewHolder extends RecyclerView.ViewHolder implements V
         endTime = (TextView) view.findViewById(R.id.endTime);
         walkDistance = (TextView) view.findViewById(R.id.walkDistance);
         duration = (TextView) view.findViewById(R.id.duration);
-        infoIconsLayout = (LinearLayout) view.findViewById(R.id.infoIconsLayout);
+        infoIconsLayout = (FlowLayout) view.findViewById(R.id.infoIconsLayout);
     }
 }
