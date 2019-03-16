@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import hu.promera.api.responses.Route;
+import hu.unideb.api.responses.Route;
 import hu.unideb.bus.R;
 import hu.unideb.bus.apicall.AgencyCall;
 import hu.unideb.bus.apicall.RouteCall;

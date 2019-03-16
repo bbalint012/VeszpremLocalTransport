@@ -42,8 +42,8 @@ import hu.unideb.bus.utils.Utils;
 
 public class TripPlannerFragment extends Fragment implements OnMapReadyCallback, OnMapLongClickListener, OnInfoWindowClickListener {
     private final String TAG = this.getClass().getSimpleName();
-    private AutoCompleteTextView fromPlace;
-    private AutoCompleteTextView toPlace;
+    private AutoCompleteTextView fromPlaceTextView;
+    private AutoCompleteTextView toPlaceTextView;
     private String fromPlaceLocation;
     private String toPlaceLocation;
     private MapView mMapView;
@@ -53,8 +53,8 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tip_planner, container, false);
-        fromPlace = (AutoCompleteTextView) view.findViewById(R.id.fromPlace);
-        toPlace = (AutoCompleteTextView) view.findViewById(R.id.toPlace);
+        fromPlaceTextView = (AutoCompleteTextView) view.findViewById(R.id.fromPlace);
+        toPlaceTextView = (AutoCompleteTextView) view.findViewById(R.id.toPlace);
         mMapView = (MapView) view.findViewById(R.id.tripPlannerMapView);
 
         Utils.setToolbar((AppCompatActivity) getActivity(), this, view, R.id.tripPlannerToolbar);
@@ -92,22 +92,23 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
         Marker m = mMap.addMarker(new MarkerOptions()
                 .position(clickedPosition)
                 .title(address)
-                .snippet("ez a snippet")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));
         m.showInfoWindow();
-        setLocations(clickedPosition);
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        if (fromPlace.getText().toString().equals("")) {
-            fromPlace.setText(marker.getTitle());
-        } else if (toPlace.getText().toString().equals("")) {
-            toPlace.setText(marker.getTitle());
+        if (fromPlaceTextView.getText().toString().equals("")) {
+            fromPlaceTextView.setText(marker.getTitle());
+            fromPlaceLocation = String.format("%f,%f", marker.getPosition().latitude, marker.getPosition().longitude);
+        } else if (toPlaceTextView.getText().toString().equals("")) {
+            toPlaceTextView.setText(marker.getTitle());
+            toPlaceLocation = String.format("%f,%f", marker.getPosition().latitude, marker.getPosition().longitude);
         } else {
-            marker.setVisible(false);
+            refreshState();
+            this.onMapLongClick(marker.getPosition());
+            this.onInfoWindowClick(marker);
         }
-
         marker.hideInfoWindow();
     }
 
@@ -120,13 +121,7 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
             Log.e(TAG, "Geocoder.getFromLocation() failed", e);
         }
         String address = addresses.get(0).getAddressLine(0);
-        String substring = address.substring(0, address.lastIndexOf(","));
-        return substring;
-    }
-
-    private void setLocations(LatLng latLng) {
-        fromPlaceLocation = String.format("%f,%f", latLng.latitude, latLng.longitude);
-        toPlaceLocation = String.format("%f,%f", latLng.latitude, latLng.longitude);
+        return address.substring(0, address.lastIndexOf(","));
     }
 
     private void getItineraries() {
@@ -145,15 +140,21 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
         BusRepository.getInstance(getActivity())
                 .getStopsWithDestinations().observe(this, items -> {
             CustomAdapter adapter = new CustomAdapter(getActivity(), items);
-            fromPlace.setAdapter(adapter);
-            fromPlace.setOnItemClickListener((parent, v, position, id) -> {
+            fromPlaceTextView.setAdapter(adapter);
+            fromPlaceTextView.setOnClickListener(v ->
+                    fromPlaceTextView.setSelection(fromPlaceTextView.getText().toString().length()));
+            fromPlaceTextView.setOnItemClickListener((parent, v, position, id) -> {
+                fromPlaceTextView.setSelection(0);
                 fromPlaceLocation = adapter.getItem(position).getLocation();
             });
 
             CustomAdapter adapter2 = new CustomAdapter(getActivity(), items);
-            toPlace.setAdapter(adapter2);
-            toPlace.setOnItemClickListener((parent, v, position, id) -> {
+            toPlaceTextView.setAdapter(adapter2);
+            toPlaceTextView.setOnClickListener(v ->
+                    toPlaceTextView.setSelection(toPlaceTextView.getText().toString().length()));
+            toPlaceTextView.setOnItemClickListener((parent, v, position, id) -> {
                 toPlaceLocation = adapter2.getItem(position).getLocation();
+                toPlaceTextView.setSelection(0);
             });
         });
     }
@@ -166,7 +167,7 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void setupEditTextListeners() {
-        toPlace.setOnEditorActionListener((v, actionId, event) -> {
+        toPlaceTextView.setOnEditorActionListener((v, actionId, event) -> {
             boolean handled = false;
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 Utils.hideKeyboard(v, getActivity());
@@ -176,13 +177,13 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
             return handled;
         });
 
-        fromPlace.setOnFocusChangeListener((v, hasFocus) -> {
+        fromPlaceTextView.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 Utils.hideKeyboard(v, getActivity());
             }
         });
 
-        toPlace.setOnFocusChangeListener((v, hasFocus) -> {
+        toPlaceTextView.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 Utils.hideKeyboard(v, getActivity());
             }
@@ -192,8 +193,8 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
     private void refreshState() {
         mMap.clear();
         Utils.setMapControls(getActivity(), mMap);
-        fromPlace.setText("");
-        toPlace.setText("");
+        fromPlaceTextView.setText("");
+        toPlaceTextView.setText("");
         fromPlaceLocation = "";
         toPlaceLocation = "";
     }

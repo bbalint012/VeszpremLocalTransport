@@ -20,19 +20,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import hu.unideb.bus.R;
 import hu.unideb.bus.adapter.RecyclerViewClickListener;
-import hu.unideb.bus.adapter.ResultAdapter;
+import hu.unideb.bus.adapter.RouteChooserAdapter;
 import hu.unideb.bus.app.RouteActivity;
 import hu.unideb.bus.utils.SharedPrefUtils;
 import hu.unideb.bus.utils.Utils;
 import hu.unideb.bus.viewmodel.ResultViewModel;
 
-public class ResultsFragment extends Fragment {
-    private ResultAdapter adapter;
+public class RouteChooserFragment extends Fragment {
+    private RouteChooserAdapter adapter;
     private List<Itinerary> itineraries = new ArrayList<>();
 
     @Nullable
     @Override
-    @SuppressWarnings("unchecked")
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_results, container, false);
         setupRecyclerView(view);
@@ -61,10 +60,11 @@ public class ResultsFragment extends Fragment {
 
         RecyclerViewClickListener listener = this::setOnClickListener;
 
-        adapter = new ResultAdapter(getActivity(), listener, itineraries);
+        adapter = new RouteChooserAdapter(getActivity(), listener, itineraries);
         mRecyclerView.setAdapter(adapter);
     }
 
+    @SuppressWarnings("unchecked")
     private void setOnClickListener(View v) {
         final ArrayList<Leg> legs = (ArrayList<Leg>) (v.findViewById(R.id.startTime).getTag());
         SharedPrefUtils.saveItinerary(getActivity(), legs);

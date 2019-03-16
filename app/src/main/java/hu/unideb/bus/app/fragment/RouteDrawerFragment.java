@@ -61,7 +61,6 @@ public class RouteDrawerFragment extends Fragment implements OnMapReadyCallback 
         showRouteOnMap();
     }
 
-    @SuppressWarnings("unchecked")
     private void showRouteOnMap() {
         final List<Leg> itinerary = getItinerary();
         if (itinerary.isEmpty()) {
@@ -75,12 +74,11 @@ public class RouteDrawerFragment extends Fragment implements OnMapReadyCallback 
                 return;
             }
 
-            polylineDrawer.addMarkers(points);
-            polylineDrawer.draw(leg, points);
-
             for (LatLng point : points) {
                 builder.include(point);
             }
+
+            polylineDrawer.draw(leg, points);
         }
 
         if (mMap != null) {

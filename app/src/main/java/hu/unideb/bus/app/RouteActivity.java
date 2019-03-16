@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import hu.unideb.bus.R;
-import hu.unideb.bus.app.fragment.ResultsFragment;
+import hu.unideb.bus.app.fragment.RouteChooserFragment;
 import hu.unideb.bus.app.fragment.RouteDrawerFragment;
 import hu.unideb.bus.utils.SharedPrefKey;
 import hu.unideb.bus.utils.SharedPrefUtils;
@@ -26,7 +26,7 @@ public class RouteActivity extends AppCompatActivity {
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.routeNavigationView);
         fragmentManager = getSupportFragmentManager();
-        resultsFragment = new ResultsFragment();
+        resultsFragment = new RouteChooserFragment();
         routeDrawFragment = new RouteDrawerFragment();
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }

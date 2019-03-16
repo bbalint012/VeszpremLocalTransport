@@ -13,7 +13,6 @@ import org.opentripplanner.routing.core.TraverseMode;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -23,12 +22,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import hu.unideb.bus.R;
 
-public class ResultAdapter extends RecyclerView.Adapter<ResultViewHolder> {
+public class RouteChooserAdapter extends RecyclerView.Adapter<RouteChooserViewHolder> {
     private final Context context;
     private final RecyclerViewClickListener listener;
     private List<Itinerary> itineraries;
 
-    public ResultAdapter(Context context, RecyclerViewClickListener listener, List<Itinerary> itineraries) {
+    public RouteChooserAdapter(Context context, RecyclerViewClickListener listener, List<Itinerary> itineraries) {
         this.context = context;
         this.listener = listener;
         this.itineraries = itineraries;
@@ -36,14 +35,14 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultViewHolder> {
 
     @NonNull
     @Override
-    public ResultViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RouteChooserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.result_list_item, parent, false);
         itemView.setFocusable(true);
-        return new ResultViewHolder(itemView, listener);
+        return new RouteChooserViewHolder(itemView, listener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ResultViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RouteChooserViewHolder holder, int position) {
         final Itinerary item = itineraries.get(position);
         holder.startTime.setTag(item.legs);
 

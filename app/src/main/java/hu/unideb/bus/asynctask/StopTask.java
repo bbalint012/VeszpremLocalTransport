@@ -8,13 +8,13 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
-import hu.promera.api.responses.Stop;
 import hu.unideb.bus.apicall.StopCall;
+import hu.unideb.bus.room.model.StopEntity;
 
 public class StopTask {
     private final String TAG = this.getClass().getSimpleName();
 
-    public List<Stop> getStopsForLocation(LatLng center) {
+    public List<StopEntity> getStopsForLocation(LatLng center) {
         try {
             return new StopsForLocationAsyncTask(center).execute().get();
         } catch (Exception e) {
@@ -23,7 +23,7 @@ public class StopTask {
         }
     }
 
-    private static class StopsForLocationAsyncTask extends AsyncTask<Void, Void, List<Stop>> {
+    private static class StopsForLocationAsyncTask extends AsyncTask<Void, Void, List<StopEntity>> {
         private StopCall call;
         private LatLng center;
 
@@ -33,7 +33,7 @@ public class StopTask {
         }
 
         @Override
-        protected List<Stop> doInBackground(final Void... params) {
+        protected List<StopEntity> doInBackground(final Void... params) {
             return call.getStopsForLocation(center);
         }
     }

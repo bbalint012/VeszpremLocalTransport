@@ -3,11 +3,10 @@ package hu.unideb.bus.room.model;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import hu.promera.api.responses.Route;
+import hu.unideb.api.responses.Route;
 
 @Entity(tableName = "routes")
 public class RouteEntity {

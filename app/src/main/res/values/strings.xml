@@ -1,9 +1,15 @@
 <resources>
     <string name="app_name">Vp-Transport</string>
-    <string name="obaBaseUrl">http://192.168.100.21:8080/</string>
-    <string name="otpBaseUrl">http://192.168.100.21:8081/</string>
+    <!--<string name="obaBaseUrl">http://192.168.100.21:8080/</string>
+    <string name="otpBaseUrl">http://192.168.100.21:8081/</string>-->
+    <string name="obaBaseUrl">http://192.168.0.104:8080/</string>
+    <string name="otpBaseUrl">http://192.168.0.104:8081/</string>
     <string name="apiKey">TEST</string>
     <string name="agencyId">BKK</string>
+
+    <!--Toolbar Text-->
+    <string name="nearbyToolbarText">NEARBY</string>
+    <string name="tripPlanningToolbarText">TRIP PLANNING</string>
 
     <!--Bottom Nav Bar-->
     <string name="menu_map">Map</string>
@@ -11,14 +17,8 @@
     <string name="menu_results">Results</string>
     <string name="menu_list">List</string>
 
-    <string name="travelFromB">Travel from</string>
-    <string name="travelToB">Travel to</string>
-
     <string name="downloadInProgress">The download is in progress.</string>
     <string name="downloadOK">The download is completed.</string>
-
-    <string name="nearbyToolbarText">NEARBY</string>
-    <string name="tripPlanningToolbarText">TRIP PLANNING</string>
 
     <string name="tripPlanner">Trip Planner</string>
     <string name="fromPlace">From Place</string>
@@ -26,10 +26,10 @@
     <string name="toPlace">To Place</string>
     <string name="plsWriteSmth">Please enter the stops.</string>
     <string name="sryRouteNotFound">Sorry, cannot find any route.</string>
-
+    <string name="travelFromB">Travel from</string>
+    <string name="travelToB">Travel to</string>
     <string name="plsZoom">Zoom in to show stops.</string>
 
-    <!--tests-->
+    <!--test-->
     <string name="testTextView">The test text view.</string>
-
 </resources>

@@ -75,7 +75,7 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui:1.0.0-alpha09"
 
     //Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.4.0'
 
@@ -88,11 +88,11 @@ dependencies {
     //Google Maps service
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
 
-    //Own oba-api client - TODO: still from local
-    implementation 'hu.promera:onebusaway-api:0.0.1-SNAPSHOT'
+    //Own oba-api client
+    implementation 'com.github.bbalint012:onebusaway-api:v1.0.0'
 
     //Own otp-api client - TODO: still from local
-    implementation 'hu.promera:otp-api:1.0.0'
+    implementation 'hu.unideb:otp-api:1.0.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
