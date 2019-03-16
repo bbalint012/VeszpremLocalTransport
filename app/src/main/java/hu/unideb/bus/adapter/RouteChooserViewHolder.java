@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import hu.unideb.bus.R;
 
-public class ResultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class RouteChooserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private RecyclerViewClickListener listener;
 
     protected TextView startTime;
@@ -17,7 +17,7 @@ public class ResultViewHolder extends RecyclerView.ViewHolder implements View.On
     protected TextView duration;
     protected LinearLayout infoIconsLayout;
 
-    ResultViewHolder(@NonNull View itemView, RecyclerViewClickListener listener) {
+    RouteChooserViewHolder(@NonNull View itemView, RecyclerViewClickListener listener) {
         super(itemView);
         initializeItems(itemView);
         this.listener = listener;
