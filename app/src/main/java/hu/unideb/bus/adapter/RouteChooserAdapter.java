@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.nex3z.flowlayout.FlowLayout;
+
 import org.opentripplanner.api.model.Itinerary;
 import org.opentripplanner.api.model.Leg;
 import org.opentripplanner.routing.core.TraverseMode;
@@ -23,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import hu.unideb.bus.R;
 
 public class RouteChooserAdapter extends RecyclerView.Adapter<RouteChooserViewHolder> {
+    private final int INFO_ICON_SIZE;
     private final Context context;
     private final RecyclerViewClickListener listener;
     private List<Itinerary> itineraries;
@@ -31,6 +34,7 @@ public class RouteChooserAdapter extends RecyclerView.Adapter<RouteChooserViewHo
         this.context = context;
         this.listener = listener;
         this.itineraries = itineraries;
+        INFO_ICON_SIZE = (int) context.getResources().getDimension(R.dimen.info_icon_size);
     }
 
     @NonNull
@@ -74,11 +78,7 @@ public class RouteChooserAdapter extends RecyclerView.Adapter<RouteChooserViewHo
     }
 
 
-    private void setInfoIconsLayout(LinearLayout infoLayout, String travelMode, boolean hasNext) {
-        if (infoLayout.getChildCount() > 0) {
-            infoLayout.removeAllViews();
-        }
-
+    private void setInfoIconsLayout(FlowLayout infoLayout, String travelMode, boolean hasNext) {
         if (TraverseMode.valueOf(travelMode).isTransit()) {
             infoLayout.addView(makeImageView(R.drawable.ic_bus));
         } else {
@@ -92,9 +92,8 @@ public class RouteChooserAdapter extends RecyclerView.Adapter<RouteChooserViewHo
 
     private ImageView makeImageView(int imgId) {
         ImageView imageview = new ImageView(context);
-        LinearLayout.LayoutParams params = new LinearLayout
-                .LayoutParams(30, 30);
-        params.setMarginEnd(100);
+        FlowLayout.LayoutParams params = new FlowLayout
+                .LayoutParams(INFO_ICON_SIZE, INFO_ICON_SIZE);
         imageview.setLayoutParams(params);
         imageview.setImageResource(imgId);
         return imageview;

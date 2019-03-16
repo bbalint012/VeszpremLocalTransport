@@ -77,9 +77,9 @@ public class StopCall {
             entity.setName(decodeToUTF8(s.getName()));
 
             if (stopGroups.get(0).getStopIds().contains(s.getId())) {
-                entity.setDestination(stopGroups.get(0).getName().getDestinationName());
+                entity.setDestination(decodeToUTF8(stopGroups.get(0).getName().getDestinationName()));
             } else {
-                entity.setDestination(stopGroups.get(1).getName().getDestinationName());
+                entity.setDestination(decodeToUTF8(stopGroups.get(1).getName().getDestinationName()));
             }
             entities.add(entity);
         }
