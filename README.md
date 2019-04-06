@@ -1,1 +1,1 @@
-# VeszpremLocalTransport
+# GTFS based local transport app
