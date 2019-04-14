@@ -11,6 +11,7 @@ import hu.unideb.bus.room.model.RouteEntity;
 
 @Dao
 public interface RouteDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(RouteEntity entity);
 

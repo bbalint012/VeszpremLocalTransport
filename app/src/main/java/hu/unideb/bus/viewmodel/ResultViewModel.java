@@ -32,6 +32,10 @@ public class ResultViewModel extends AndroidViewModel {
         return itineraries;
     }
 
+    public void invalidateItineraries() {
+        itineraries = null;
+    }
+
     private void loadItineraries() {
         TripPlannerTask tripPlannerTask = new TripPlannerTask();
         List<Itinerary> result = tripPlannerTask.getTripPlan(

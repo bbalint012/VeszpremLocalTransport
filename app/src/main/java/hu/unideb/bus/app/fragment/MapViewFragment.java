@@ -109,13 +109,13 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, OnM
 
         getLocationPermission();
         setMapUi();
-        getLastKnownLocation();
+        setRequestLocationUpdates();
     }
 
 
     @Override
     public boolean onMyLocationButtonClick() {
-        getLastKnownLocation();
+        setRequestLocationUpdates();
         return true;
     }
 
@@ -135,7 +135,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, OnM
 
         mCurrentZoom = mMap.getCameraPosition().zoom;
         if (mCurrentZoom < DEFAULT_ZOOM) {
-            showSnackBar(getView());
+            showZoomInSnackBar(getView());
             mMap.clear();
             return;
         } else {
@@ -190,8 +190,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, OnM
 
     private void getLocationPermission() {
         if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
         } else {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
@@ -219,13 +218,13 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, OnM
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.setOnCameraMoveStartedListener(this);
         mMap.setOnCameraIdleListener(this);
-        mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(getActivity()));
         mMap.setOnMarkerClickListener(this);
+        mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(getActivity()));
     }
 
 
     @SuppressLint("MissingPermission")
-    private void getLastKnownLocation() {
+    private void setRequestLocationUpdates() {
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
@@ -255,7 +254,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, OnM
                 .newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM));
     }
 
-
     private void createStopMarkers(StopEntity stop, List<RouteEntity> routes) {
         Marker m = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(stop.getLat(), stop.getLon()))
@@ -264,7 +262,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, OnM
         m.setTag(routes);
     }
 
-    private void showSnackBar(View view) {
+    private void showZoomInSnackBar(View view) {
         if (snackbar != null && snackbar.isShown()) {
             return;
         }

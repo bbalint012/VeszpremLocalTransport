@@ -21,13 +21,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import hu.unideb.bus.R;
 import hu.unideb.bus.adapter.RecyclerViewClickListener;
 import hu.unideb.bus.adapter.RouteChooserAdapter;
-import hu.unideb.bus.app.RouteActivity;
+import hu.unideb.bus.app.TripPlannerDetailsActivity;
 import hu.unideb.bus.utils.SharedPrefUtils;
 import hu.unideb.bus.utils.Utils;
 import hu.unideb.bus.viewmodel.ResultViewModel;
 
 public class RouteChooserFragment extends Fragment {
     private RouteChooserAdapter adapter;
+    private ResultViewModel mViewModel;
     private List<Itinerary> itineraries = new ArrayList<>();
 
     @Nullable
@@ -41,16 +42,14 @@ public class RouteChooserFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ResultViewModel mViewModel = ViewModelProviders.of(this).get(ResultViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(ResultViewModel.class);
+        checkItineraries();
+    }
 
-        mViewModel.getItineraries().observe(this, itineraries -> {
-            if (itineraries.isEmpty()) {
-                Utils.showToast(getActivity(), getResources().getString(R.string.sryRouteNotFound), Toast.LENGTH_LONG);
-                getActivity().onBackPressed();
-                return;
-            }
-            adapter.setItineraries(itineraries);
-        });
+    @Override
+    public void onPause() {
+        super.onPause();
+        mViewModel.invalidateItineraries();
     }
 
     private void setupRecyclerView(View view) {
@@ -64,6 +63,17 @@ public class RouteChooserFragment extends Fragment {
         mRecyclerView.setAdapter(adapter);
     }
 
+    private void checkItineraries() {
+        mViewModel.getItineraries().observe(this, itineraries -> {
+            if (itineraries.isEmpty()) {
+                Utils.showToast(getActivity(), getResources().getString(R.string.sryRouteNotFound), Toast.LENGTH_LONG);
+                getActivity().onBackPressed();
+                return;
+            }
+            adapter.setItineraries(itineraries);
+        });
+    }
+
     @SuppressWarnings("unchecked")
     private void setOnClickListener(View v) {
         final ArrayList<Leg> legs = (ArrayList<Leg>) (v.findViewById(R.id.startTime).getTag());
@@ -72,7 +82,7 @@ public class RouteChooserFragment extends Fragment {
     }
 
     private void navigateToDrawerFragment() {
-        final RouteActivity activity = (RouteActivity) getActivity();
+        final TripPlannerDetailsActivity activity = (TripPlannerDetailsActivity) getActivity();
         activity.getBottomNavigationView().setSelectedItemId(R.id.navigation_routeDraw);
     }
 }

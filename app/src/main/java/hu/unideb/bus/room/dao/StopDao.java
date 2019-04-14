@@ -12,6 +12,7 @@ import hu.unideb.bus.room.model.StopEntity;
 
 @Dao
 public interface StopDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(StopEntity stop);
 

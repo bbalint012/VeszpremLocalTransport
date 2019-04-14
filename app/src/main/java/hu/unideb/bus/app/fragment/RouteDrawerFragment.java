@@ -24,12 +24,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import hu.unideb.bus.R;
 import hu.unideb.bus.ui.PolylineDrawer;
-import hu.unideb.bus.utils.LocationUtil;
+import hu.unideb.bus.utils.PolylineDecoder;
 import hu.unideb.bus.utils.SharedPrefUtils;
 import hu.unideb.bus.utils.Utils;
 
 public class RouteDrawerFragment extends Fragment implements OnMapReadyCallback {
     private final String TAG = this.getClass().getSimpleName();
+    private final static int DEFAUL_ZOOM = 48;
     private MapView mMapView;
     private GoogleMap mMap;
     private PolylineDrawer polylineDrawer;
@@ -69,7 +70,7 @@ public class RouteDrawerFragment extends Fragment implements OnMapReadyCallback 
 
         LatLngBounds.Builder builder = LatLngBounds.builder();
         for (Leg leg : itinerary) {
-            List<LatLng> points = LocationUtil.decodePoly(leg.legGeometry.getPoints());
+            List<LatLng> points = PolylineDecoder.decodePoly(leg.legGeometry.getPoints());
             if (points.isEmpty()) {
                 return;
             }
@@ -82,7 +83,7 @@ public class RouteDrawerFragment extends Fragment implements OnMapReadyCallback 
         }
 
         if (mMap != null) {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 48));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), DEFAUL_ZOOM));
         }
     }
 

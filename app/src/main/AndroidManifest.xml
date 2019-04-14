@@ -31,7 +31,7 @@
         <activity
             android:name=".app.MainActivity"
             android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".app.RouteActivity" />
+        <activity android:name=".app.TripPlannerDetailsActivity" />
     </application>
 
 </manifest>

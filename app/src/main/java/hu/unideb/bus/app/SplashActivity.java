@@ -10,6 +10,8 @@ import hu.unideb.bus.R;
 import hu.unideb.bus.asynctask.PopulateDbAsyncTask;
 import hu.unideb.bus.utils.SharedPrefUtils;
 
+import static hu.unideb.bus.utils.SharedPrefUtils.clearSharedPreferences;
+
 public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

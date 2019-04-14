@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 public class Utils {
+    private static final int MAP_ZOOM_CITY_LEVEL = 10;
     private static Toast toast;
 
     public static void showToast(Context context, String message, int toastDuration) {
@@ -32,11 +33,10 @@ public class Utils {
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
-    public static void setMapControls(Context context, GoogleMap map) {
-        map.getUiSettings().setZoomControlsEnabled(true);
-        map.getUiSettings().setZoomGesturesEnabled(true);
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(SharedPrefUtils.getDefaultLatLng(context), 10));
-
+    public static void setMapControls(Context context, GoogleMap mMap) {
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(SharedPrefUtils.getDefaultLatLng(context), MAP_ZOOM_CITY_LEVEL));
     }
 
     public static int getActionBarHeight(Context context) {

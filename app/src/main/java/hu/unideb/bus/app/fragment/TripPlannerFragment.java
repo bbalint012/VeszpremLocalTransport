@@ -33,7 +33,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import hu.unideb.bus.R;
-import hu.unideb.bus.app.RouteActivity;
+import hu.unideb.bus.app.TripPlannerDetailsActivity;
 import hu.unideb.bus.room.BusRepository;
 import hu.unideb.bus.ui.CustomAdapter;
 import hu.unideb.bus.utils.SharedPrefKey;
@@ -92,7 +92,7 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
         Marker m = mMap.addMarker(new MarkerOptions()
                 .position(clickedPosition)
                 .title(address)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop_marker)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.common_marker)));
         m.showInfoWindow();
     }
 
@@ -133,7 +133,7 @@ public class TripPlannerFragment extends Fragment implements OnMapReadyCallback,
 
         SharedPrefUtils.saveString(getActivity(), SharedPrefKey.FROM_PLACE_LOCATION.getKey(), fromPlaceLocation);
         SharedPrefUtils.saveString(getActivity(), SharedPrefKey.TO_PLACE_LOCATION.getKey(), toPlaceLocation);
-        startActivity(new Intent(getActivity(), RouteActivity.class));
+        startActivity(new Intent(getActivity(), TripPlannerDetailsActivity.class));
     }
 
     private void setAutoCompleteTextViews() {

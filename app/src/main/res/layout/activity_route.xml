@@ -6,7 +6,7 @@
     android:id="@+id/routeActivityContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".app.RouteActivity">
+    tools:context=".app.TripPlannerDetailsActivity">
 
     <fragment
         android:id="@+id/fragment"

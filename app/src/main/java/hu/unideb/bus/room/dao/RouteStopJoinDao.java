@@ -14,17 +14,20 @@ import hu.unideb.bus.room.model.StopEntity;
 
 @Dao
 public interface RouteStopJoinDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(RouteStopJoin userRepoJoin);
 
     @Query("SELECT * FROM routes " +
-            "INNER JOIN route_stop_join ON routes.id = route_stop_join.routeId " +
+            "INNER JOIN route_stop_join " +
+            "ON routes.id = route_stop_join.routeId " +
             "WHERE route_stop_join.stopId = :stopId")
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     LiveData<List<RouteEntity>> getRoutesForStop(String stopId);
 
     @Query("SELECT * FROM stops " +
-            "INNER JOIN route_stop_join ON stops.id = route_stop_join.stopId " +
+            "INNER JOIN route_stop_join " +
+            "ON stops.id = route_stop_join.stopId " +
             "WHERE route_stop_join.routeId = :routeId")
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     LiveData<List<StopEntity>> getStopsForRoutes(String routeId);
